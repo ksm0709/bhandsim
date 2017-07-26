@@ -1,16 +1,65 @@
 <?xml version="1.0"?>
-<!-- Revolute-Revolute Manipulator -->
 <robot name="rrbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
-  <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
-  <xacro:property name="height1" value="2" /> <!-- Link 1 -->
-  <xacro:property name="height2" value="1" /> <!-- Link 2 -->
-  <xacro:property name="height3" value="1" /> <!-- Link 3 -->
-  <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
-  <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
+  <xacro:property name="mass" value="2.0" /> <!-- arbitrary value for mass -->
+  <xacro:property name="width" value="0.05" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <xacro:property name="ry" value="0.016" />
+  <xacro:property name="rz" value="0.02" />
+  <xacro:property name="height1" value="1.5" /> <!-- Link 1 -->
+  <xacro:property name="height2" value="0.25" /> <!-- Link 2 -->
+  <xacro:property name="height3" value="0.4" /> <!-- Link 3 -->
+  <xacro:property name="height4" value="0.4" /><!-- Link4 -->
+  
+  <xacro:property name="height_w1" value="0.03" />
+  <xacro:property name="width_w1" value="0.02" />
+  <xacro:property name="mass_w1" value="1" />
+
+  <xacro:property name="height_w2" value="0.03" />
+  <xacro:property name="width_w2" value="0.02" />
+  <xacro:property name="mass_w2" value="1" />
+  
+  <xacro:property name="height_p" value="0.1" />
+  <xacro:property name="width_p" value="0.09" />
+  <xacro:property name="mass_p" value="1" />
+
+  <xacro:property name="height_t" value="0.03" />
+  <xacro:property name="width_t" value="0.02" />
+  <xacro:property name="mass_t" value="1" />
+
+  <xacro:property name="height_i" value="0.03" />
+  <xacro:property name="width_i" value="0.02" />
+  <xacro:property name="mass_i" value="1" />
+
+  <xacro:property name="height_m" value="0.03" />
+  <xacro:property name="width_m" value="0.02" />
+  <xacro:property name="mass_m" value="1" />
+
+  <xacro:property name="height_s" value="0.03" />
+  <xacro:property name="width_s" value="0.02" />
+  <xacro:property name="mass_s" value="1" />
+
+  <xacro:property name="height_l" value="0.03" />
+  <xacro:property name="width_l" value="0.02" />
+  <xacro:property name="mass_l" value="1" />
+
+  <xacro:property name="rl" value="${sqrt((rz+height4)*(rz+height4)+ry*ry)}" />
+  <xacro:property name="model_scale" value="0.6 0.6 0.6" />
+  <xacro:property name="model_humerus" value="package://rrbot_description/meshes/humerus_0.1_r.dae" />
+  <xacro:property name="model_radius" value="package://rrbot_description/meshes/radius_0.1_t.dae" />
+  <xacro:property name="model_ulna" value="package://rrbot_description/meshes/ulna_0.1_r.dae" />
+  <xacro:property name="model_hand" value="package://rrbot_description/meshes/hand.dae" />
+  <xacro:property name="model_wrist1" value="package://rrbot_description/meshes/hand/wrist1.dae" />
+  <xacro:property name="model_wrist2" value="package://rrbot_description/meshes/hand/wrist2.dae" />
+  <xacro:property name="model_palm" value="package://rrbot_description/meshes/hand/palm.dae" />
+<xacro:property name="model_thumb1" value="package://rrbot_description/meshes/hand/thumb1.dae" />
+<xacro:property name="model_thumb2" value="package://rrbot_description/meshes/hand/thumb2.dae" />
+<xacro:property name="model_thumb3" value="package://rrbot_description/meshes/hand/thumb3.dae" />
+<xacro:property name="model_index1" value="package://rrbot_description/meshes/hand/index1.dae" />
+<xacro:property name="model_index2" value="package://rrbot_description/meshes/hand/index2.dae" />
+<xacro:property name="model_index3" value="package://rrbot_description/meshes/hand/index3.dae" />
+
 
   <!-- Import all Gazebo-customization elements, including Gazebo colors -->
   <xacro:include filename="$(find rrbot_description)/urdf/rrbot.gazebo" />
@@ -46,16 +95,50 @@
       <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-	  ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
-	  iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
-	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+	  ixx="${mass / 1.0  * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 1.0  * (height1*height1 + width*width)}" iyz="0.0"
+	  izz="${mass / 1.0  * (width*width + width*width)}"/>
+    </inertial>
+  </link>
+  
+  <joint name="joint_bridge" type="fixed">
+    <parent link="link1"/>
+    <child link="link_bridge"/>
+	<origin xyz="0 ${width} ${height1 - width/2}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="link_bridge">
+    <collision>
+		<origin xyz="0 ${width*3/2} 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width*3} ${width}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 ${width} 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width*3} ${width}"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 ${width} 0" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia
+	  ixx="${mass / 1.0  * (width*width + width*width)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 1.0  * (width*width + width*width)}" iyz="0.0"
+	  izz="${mass / 1.0  * (width*width + width*width)}"/>
     </inertial>
   </link>
 
-  <joint name="joint1" type="continuous">
-    <parent link="link1"/>
+  <joint name="joint1" type="fixed">
+    <parent link="link_bridge"/>
     <child link="link2"/>
-    <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
+	<origin xyz="0 ${width*3} -0.05" rpy="0 ${PI} 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
   </joint>
@@ -63,139 +146,777 @@
   <!-- Middle Link -->
   <link name="link2">
     <collision>
-      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${height2/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="${width} ${width} ${height2}"/>
+	<!--box size="${width} ${width} ${height2}"/-->
+	<mesh filename="${model_humerus}" scale="${model_scale}" />
+
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${height2/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="${width} ${width} ${height2}"/>
+		  <!--box size="${width} ${width} ${height2}"/-->
+		<mesh filename="${model_humerus}" scale="${model_scale}" />
       </geometry>
-      <material name="black"/>
+      <!--material name="black"/-->
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${height2/2}" rpy="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-	  ixx="${mass / 12.0 * (width*width + height2*height2)}" ixy="0.0" ixz="0.0"
-	  iyy="${mass / 12.0 * (height2*height2 + width*width)}" iyz="0.0"
-	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+	  ixx="${mass / 1.0  * (width*width + height2*height2)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 1.0  * (height2*height2 + width*width)}" iyz="0.0"
+	  izz="${mass / 1.0  * (width*width + width*width)}"/>
     </inertial>
   </link>
 
   <joint name="joint2" type="continuous">
     <parent link="link2"/>
     <child link="link3"/>
-    <origin xyz="0 ${width} ${height2 - axel_offset*2}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+	<origin xyz="0.04 0 ${height2}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
   </joint>
 
-  <!-- Top Link -->
   <link name="link3">
     <collision>
-      <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height3/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="${width} ${width} ${height3}"/>
+		  <!--box size="${width} ${width} ${height3}"/-->
+		<mesh filename="${model_ulna}" scale="${model_scale}" />
+
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height3/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="${width} ${width} ${height3}"/>
+	<!--box size="${width} ${width} ${height3}"/-->
+	<mesh filename="${model_ulna}" scale="${model_scale}" />
+
       </geometry>
       <material name="orange"/>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height3/2}" rpy="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-	  ixx="${mass / 12.0 * (width*width + height3*height3)}" ixy="0.0" ixz="0.0"
-	  iyy="${mass / 12.0 * (height3*height3 + width*width)}" iyz="0.0"
-	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+	  ixx="${mass / 1.0  * (width*width + height3*height3)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 1.0  * (height3*height3 + width*width)}" iyz="0.0"
+	  izz="${mass / 1.0  * (width*width + width*width)}"/>
     </inertial>
   </link>
 
-  <joint name="hokuyo_joint" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin xyz="0 0 ${height3 - axel_offset/2}" rpy="0 0 0"/>
+  <joint name="joint3" type="continuous">
     <parent link="link3"/>
-    <child link="hokuyo_link"/>
+    <child link="link4"/>
+	<origin xyz="-0.014 ${ry} ${rz}" rpy="0 0 0"/>
+	<axis xyz="0 ${-ry/rl} ${(rz+height4)/rl}"/>
+	<!--axis xyz="0 0 1" /-->
+    <dynamics damping="0.7"/>
   </joint>
 
-  <!-- Hokuyo Laser -->
-  <link name="hokuyo_link">
+  <link name="link4">
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height4/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="0.1 0.1 0.1"/>
+		  <!--box size="${width} ${width} ${height4}"/-->
+     	<mesh filename="${model_radius}" scale="${model_scale}" />
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height4/2}" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://rrbot_description/meshes/hokuyo.dae"/>
+		<!--box size="${width} ${width} ${height4}"/-->
+		<mesh filename="${model_radius}" scale="${model_scale}" />
+
       </geometry>
+      <material name="orange"/>
     </visual>
 
     <inertial>
-      <mass value="1e-5" />
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+		<origin xyz="0 0 ${height4/2}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia
+	  ixx="${mass / 1.0  * (width*width + height4*height4)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 1.0  * (height4*height4 + width*width)}" iyz="0.0"
+	  izz="${mass / 1.0  * (width*width + width*width)}"/>
     </inertial>
   </link>
 
-  <joint name="camera_joint" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin xyz="${camera_link} 0 ${height3 - axel_offset*2}" rpy="0 0 0"/>
-    <parent link="link3"/>
-    <child link="camera_link"/>
+<!--********************* WRIST *********************** -->
+  <joint name="wrist_joint1" type="continuous">
+    <parent link="link4"/>
+    <child link="wrist_link1"/>
+		<origin xyz="-0.0025 0 ${height4-0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
   </joint>
 
-  <!-- Camera -->
-  <link name="camera_link">
+  <link name="wrist_link1">
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height_w1/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+		  <!--box size="${width_w1} ${width_w1*4} ${height_w1}"/-->
+     	<mesh filename="${model_wrist1}" scale="0 0 0" />
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+		<origin xyz="0 0 ${height_w1/2}" rpy="0 0 0"/>
       <geometry>
-	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+		<!--box size="${width_w1} ${width_w1*4} ${height_w1}"/-->
+		<mesh filename="${model_wrist1}" scale="${model_scale}" />
       </geometry>
-      <material name="red"/>
+      <material name="orange"/>
     </visual>
 
     <inertial>
-      <mass value="1e-5" />
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+		<origin xyz="0 0 ${height_w1/2}" rpy="0 0 0"/>
+      <mass value="${mass_w1}"/>
+      <inertia
+	  ixx="${mass_w1 / 1.0  * (width_w1*width_w1 + height_w1*height_w1)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass_w1 / 1.0  * (height_w1*height_w1 + width_w1*width_w1)}" iyz="0.0"
+	  izz="${mass_w1 / 1.0  * (width_w1*width_w1 + width_w1*width_w1)}"/>
     </inertial>
   </link>
 
-  <!-- generate an optical frame http://www.ros.org/reps/rep-0103.html#suffix-frames
-      so that ros and opencv can operate on the camera frame correctly -->
-  <joint name="camera_optical_joint" type="fixed">
-    <!-- these values have to be these values otherwise the gazebo camera image
-        won't be aligned properly with the frame it is supposedly originating from -->
-    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
-    <parent link="camera_link"/>
-    <child link="camera_link_optical"/>
+  <joint name="wrist_joint2" type="continuous">
+    <parent link="wrist_link1"/>
+    <child link="wrist_link2"/>
+		<origin xyz="-0.01 0 ${height_w2-0.001}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
   </joint>
 
-  <link name="camera_link_optical">
+  <link name="wrist_link2">
+    <collision>
+		<origin xyz="0 0 ${height_w2/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_w2} ${width_w2*4} ${height_w2}"/-->
+     	<mesh filename="${model_wrist2}" scale="0 0 0" />
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_w2/2}" rpy="0 0 0"/>
+      <geometry>
+		<!--box size="${width_w2} ${width_w2*4} ${height_w2}"/-->
+		<mesh filename="${model_wrist2}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_w2/2}" rpy="0 0 0"/>
+      <mass value="${mass_w2}"/>
+      <inertia
+	  ixx="${mass_w2 / 1.0  * (width_w2*width_w2 + height_w2*height_w2)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass_w2 / 1.0  * (height_w2*height_w2 + width_w2*width_w2)}" iyz="0.0"
+	  izz="${mass_w2 / 1.0  * (width_w2*width_w2 + width_w2*width_w2)}"/>
+    </inertial>
   </link>
 
+  <joint name="wrist_connector" type="fixed">
+	  <parent link="wrist_link2"/>
+	  <child link="palm"/>
+	  <origin xyz="-0.009 0.013 ${height_w2+0.013}" rpy="0 0 0"/>
+  </joint>
+
+<!--**************** Palm ********************-->
+  <link name="palm">
+    <collision>
+		<origin xyz="0 0 ${height_p/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width/2} ${width_p} ${height_p}"/-->
+		<mesh filename="${model_palm}" scale="${model_scale}" />
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_p/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width/2} ${width_p} ${height_p}"/-->
+		<mesh filename="${model_palm}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_p/2}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia
+	  ixx="${mass*3 / 1.0  * (width_p*width_p + height_p*height_p)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass*3 / 1.0  * (height_p*height_p + width*width)}" iyz="0.0"
+	  izz="${mass*3 / 1.0  * (width_p*width_p + width*width)}"/>
+    </inertial>
+  </link>
+
+  <!--******************* THUMB **********************-->
+  
+  <joint name="thumb_joint1" type="continuous">
+    <parent link="palm"/>
+    <child link="thumb_link1"/>
+	<origin xyz="0.01 ${width_p/2+0.02} 0.025" rpy="${-PI/3} ${PI/8} ${-PI/6}"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="thumb_link1">
+    <collision>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_t} ${width_t} ${height_t}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_t} ${width_t} ${height_t}"/-->
+		  <mesh filename="${model_thumb1}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <mass value="${mass_t}"/>
+      <inertia
+		  ixx="${mass_t * (width_t*width_t + height_t*height_t) / 1.0  }" ixy="0.0" ixz="0.0"
+		  iyy="${mass_t * (height_t*height_t + width_t*width_t) / 1.0  }" iyz="0.0"
+		  izz="${mass_t * (width_t*width_t + width_t*width_t) / 1.0  }"/>
+    </inertial>
+  </link>
+
+  <joint name="thumb_joint2" type="continuous">
+    <parent link="thumb_link1"/>
+    <child link="thumb_link2"/>
+	<origin xyz="0 0 ${height_t+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="thumb_link2">
+    <collision>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_t} ${width_t} ${height_t}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_t} ${width_t} ${height_t}"/-->
+		  <mesh filename="${model_thumb2}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <mass value="${mass_t}"/>
+      <inertia
+		  ixx="${mass_t * (width_t*width_t + height_t*height_t)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_t * (height_t*height_t + width_t*width_t)/1.0}" iyz="0.0"
+		  izz="${mass_t * (width_t*width_t + width_t*width_t)/1.0}"/>
+    </inertial>
+  </link>
+
+  <joint name="thumb_joint3" type="continuous">
+    <parent link="thumb_link2"/>
+    <child link="thumb_link3"/>
+	<origin xyz="0 0 ${height_t+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="thumb_link3">
+    <collision>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_t} ${width_t} ${height_t}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_t} ${width_t} ${height_t}"/-->
+		  <mesh filename="${model_thumb3}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_t/2}" rpy="0 0 0"/>
+      <mass value="${mass_t}"/>
+      <inertia
+		  ixx="${mass_t * (width_t*width_t + height_t*height_t)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_t * (height_t*height_t + width_t*width_t)/1.0}" iyz="0.0"
+		  izz="${mass_t * (width_t*width_t + width_t*width_t)/1.0}"/>
+    </inertial>
+  </link>
+
+  <!--***************** INDEX *********************-->
+
+<joint name="index_joint1" type="continuous">
+    <parent link="palm"/>
+    <child link="index_link1"/>
+	<origin xyz="0.008 ${width_p/2+0.004} ${height_p+0.03}" rpy="${-PI/20} 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="index_link1">
+    <collision>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_i} ${width_i} ${height_i}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_i} ${width_i} ${height_i}"/-->
+		  <mesh filename="${model_index1}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <mass value="${mass_i}"/>
+      <inertia
+		  ixx="${mass_i * (width_i*width_i + height_i*height_i) / 1.0  }" ixy="0.0" ixz="0.0"
+		  iyy="${mass_i * (height_i*height_i + width_i*width_i) / 1.0  }" iyz="0.0"
+		  izz="${mass_i * (width_i*width_i + width_i*width_i) / 1.0  }"/>
+    </inertial>
+  </link>
+
+  <joint name="index_joint2" type="continuous">
+    <parent link="index_link1"/>
+    <child link="index_link2"/>
+	<origin xyz="0 0 ${height_i+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="index_link2">
+    <collision>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_i} ${width_i} ${height_i}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_i} ${width_i} ${height_i}"/-->
+		  <mesh filename="${model_index2}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <mass value="${mass_i}"/>
+      <inertia
+		  ixx="${mass_i * (width_i*width_i + height_i*height_i)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_i * (height_i*height_i + width_i*width_i)/1.0}" iyz="0.0"
+		  izz="${mass_i * (width_i*width_i + width_i*width_i)/1.0}"/>
+    </inertial>
+  </link>
+
+  <joint name="index_joint3" type="continuous">
+    <parent link="index_link2"/>
+    <child link="index_link3"/>
+	<origin xyz="0 0 ${height_i+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="index_link3">
+    <collision>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_i} ${width_i} ${height_i}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_i} ${width_i} ${height_i}"/-->
+		  <mesh filename="${model_index3}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_i/2}" rpy="0 0 0"/>
+      <mass value="${mass_i}"/>
+      <inertia
+		  ixx="${mass_i * (width_i*width_i + height_i*height_i)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_i * (height_i*height_i + width_i*width_i)/1.0}" iyz="0.0"
+		  izz="${mass_i * (width_i*width_i + width_i*width_i)/1.0}"/>
+    </inertial>
+  </link>
+
+  <!--***************** MIDDLE *********************-->
+
+  <joint name="middle_joint1" type="continuous">
+    <parent link="palm"/>
+    <child link="middle_link1"/>
+	<origin xyz="0.008 ${width_p/2-0.033} ${height_p+0.033}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="middle_link1">
+    <collision>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_m} ${width_m} ${height_m}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_m} ${width_m} ${height_m}"/-->
+		<mesh filename="${model_index1}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <mass value="${mass_m}"/>
+      <inertia
+		  ixx="${mass_m * (width_m*width_m + height_m*height_m) / 1.0  }" ixy="0.0" ixz="0.0"
+		  iyy="${mass_m * (height_m*height_m + width_m*width_m) / 1.0  }" iyz="0.0"
+		  izz="${mass_m * (width_m*width_m + width_m*width_m) / 1.0  }"/>
+    </inertial>
+  </link>
+
+  <joint name="middle_joint2" type="continuous">
+    <parent link="middle_link1"/>
+    <child link="middle_link2"/>
+	<origin xyz="0 0 ${height_m+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="middle_link2">
+    <collision>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_m} ${width_m} ${height_m}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_m} ${width_m} ${height_m}"/-->
+		  <mesh filename="${model_index2}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <mass value="${mass_m}"/>
+      <inertia
+		  ixx="${mass_m * (width_m*width_m + height_m*height_m)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_m * (height_m*height_m + width_m*width_m)/1.0}" iyz="0.0"
+		  izz="${mass_m * (width_m*width_m + width_m*width_m)/1.0}"/>
+    </inertial>
+  </link>
+
+  <joint name="middle_joint3" type="continuous">
+    <parent link="middle_link2"/>
+    <child link="middle_link3"/>
+	<origin xyz="0 0 ${height_m+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="middle_link3">
+    <collision>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_m} ${width_m} ${height_m}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_m} ${width_m} ${height_m}"/-->
+		  <mesh filename="${model_index3}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_m/2}" rpy="0 0 0"/>
+      <mass value="${mass_m}"/>
+      <inertia
+		  ixx="${mass_m * (width_m*width_m + height_m*height_m)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_m * (height_m*height_m + width_m*width_m)/1.0}" iyz="0.0"
+		  izz="${mass_m * (width_m*width_m + width_m*width_m)/1.0}"/>
+    </inertial>
+  </link>
+
+  <!--***************** SMALL *********************-->
+
+<joint name="small_joint1" type="continuous">
+    <parent link="palm"/>
+    <child link="small_link1"/>
+	<origin xyz="0.008 ${width_p/2-0.068} ${height_p+0.027}" rpy="${PI/60} 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="small_link1">
+    <collision>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_s} ${width_s} ${height_s}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_s} ${width_s} ${height_s}"/-->
+		  <mesh filename="${model_index1}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <mass value="${mass_s}"/>
+      <inertia
+		  ixx="${mass_s * (width_s*width_s + height_s*height_s) / 1.0  }" ixy="0.0" ixz="0.0"
+		  iyy="${mass_s * (height_s*height_s + width_s*width_s) / 1.0  }" iyz="0.0"
+		  izz="${mass_s * (width_s*width_s + width_s*width_s) / 1.0  }"/>
+    </inertial>
+  </link>
+
+  <joint name="small_joint2" type="continuous">
+    <parent link="small_link1"/>
+    <child link="small_link2"/>
+	<origin xyz="0 0 ${height_s+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="small_link2">
+    <collision>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_s} ${width_s} ${height_s}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_s} ${width_s} ${height_s}"/-->
+		  <mesh filename="${model_index2}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <mass value="${mass_s}"/>
+      <inertia
+		  ixx="${mass_s * (width_s*width_s + height_s*height_s)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_s * (height_s*height_s + width_s*width_s)/1.0}" iyz="0.0"
+		  izz="${mass_s * (width_s*width_s + width_s*width_s)/1.0}"/>
+    </inertial>
+  </link>
+
+  <joint name="small_joint3" type="continuous">
+    <parent link="small_link2"/>
+    <child link="small_link3"/>
+	<origin xyz="0 0 ${height_s+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="small_link3">
+    <collision>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_s} ${width_s} ${height_s}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_s} ${width_s} ${height_s}"/-->
+		  <mesh filename="${model_index3}" scale="${model_scale}" />
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_s/2}" rpy="0 0 0"/>
+      <mass value="${mass_s}"/>
+      <inertia
+		  ixx="${mass_s * (width_s*width_s + height_s*height_s)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_s * (height_s*height_s + width_s*width_s)/1.0}" iyz="0.0"
+		  izz="${mass_s * (width_s*width_s + width_s*width_s)/1.0}"/>
+    </inertial>
+  </link>
+
+   <!--***************** LITTLE *********************-->
+
+<joint name="little_joint1" type="continuous">
+    <parent link="palm"/>
+    <child link="little_link1"/>
+	<origin xyz="0.008 ${width_p/2-0.102} ${height_p+0.012}" rpy="${PI/30} 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="little_link1">
+    <collision>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_l} ${width_l} ${height_l}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_l} ${width_l} ${height_l}"/-->
+		  <mesh filename="${model_index1}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <mass value="${mass_l}"/>
+      <inertia
+		  ixx="${mass_l * (width_l*width_l + height_l*height_l) / 1.0  }" ixy="0.0" ixz="0.0"
+		  iyy="${mass_l * (height_l*height_l + width_l*width_l) / 1.0  }" iyz="0.0"
+		  izz="${mass_l * (width_l*width_l + width_l*width_l) / 1.0  }"/>
+    </inertial>
+  </link>
+
+  <joint name="little_joint2" type="continuous">
+    <parent link="little_link1"/>
+    <child link="little_link2"/>
+	<origin xyz="0 0 ${height_l+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="little_link2">
+    <collision>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_l} ${width_l} ${height_l}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_l} ${width_l} ${height_l}"/-->
+		  <mesh filename="${model_index2}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <mass value="${mass_l}"/>
+      <inertia
+		  ixx="${mass_l * (width_l*width_l + height_l*height_l)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_l * (height_l*height_l + width_l*width_l)/1.0}" iyz="0.0"
+		  izz="${mass_l * (width_l*width_l + width_l*width_l)/1.0}"/>
+    </inertial>
+  </link>
+
+  <joint name="little_joint3" type="continuous">
+    <parent link="little_link2"/>
+    <child link="little_link3"/>
+	<origin xyz="0 0 ${height_l+0.01}" rpy="0 0 0"/>
+	<axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <link name="little_link3">
+    <collision>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <geometry>
+		  <box size="${width_l} ${width_l} ${height_l}"/>
+
+      </geometry>
+    </collision>
+
+    <visual>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <geometry>
+		  <!--box size="${width_l} ${width_l} ${height_l}"/-->
+		  <mesh filename="${model_index3}" scale="${model_scale}" />
+
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+		<origin xyz="0 0 ${height_l/2}" rpy="0 0 0"/>
+      <mass value="${mass_l}"/>
+      <inertia
+		  ixx="${mass_l * (width_l*width_l + height_l*height_l)/1.0}" ixy="0.0" ixz="0.0"
+		  iyy="${mass_l * (height_l*height_l + width_l*width_l)/1.0}" iyz="0.0"
+		  izz="${mass_l * (width_l*width_l + width_l*width_l)/1.0}"/>
+    </inertial>
+  </link>
+
+
+<!--
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint1">
@@ -203,10 +924,10 @@
     </joint>
     <actuator name="motor1">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
+      <mechanicalReduction>100</mechanicalReduction>
     </actuator>
   </transmission>
-
+-->
   <transmission name="tran2">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint2">
@@ -214,8 +935,208 @@
     </joint>
     <actuator name="motor2">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
+      <mechanicalReduction>100</mechanicalReduction>
     </actuator>
   </transmission>
+  
+  <transmission name="tran3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+  <transmission name="tran_wrist1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wrist_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+  <transmission name="tran_wrist2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wrist_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <transmission name="tran_thumb1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="thumb_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_thumb2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="thumb_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_thumb3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="thumb_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_index1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="index_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_index2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="index_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_index3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="index_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_middle1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="middle_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_middle2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="middle_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_middle3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="middle_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_small1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="small_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="small_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_small2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="small_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="small_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_small3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="small_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="small_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_little1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="little_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="little_joint1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_little2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="little_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="little_joint2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_little3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="little_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="little_joint3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>100</mechanicalReduction>
+    </actuator>
+  </transmission>
+
 
 </robot>

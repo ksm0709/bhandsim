@@ -2,14 +2,93 @@ rrbot:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50  
+    publish_rate: 100 
   
   # Position Controllers ---------------------------------------
-  joint1_position_controller:
-    type: effort_controllers/JointPositionController
-    joint: joint1
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+#  joint1_position_controller:
+#    type: effort_controllers/JointPositionController
+#    joint: joint1
+#    pid: {p: 100.0, i: 0.01, d: 20}
   joint2_position_controller:
     type: effort_controllers/JointPositionController
     joint: joint2
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 100.0, i: 0.01, d: 20}
+  joint3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: joint3
+    pid: {p: 100.0, i: 0.01, d: 20}
+  wrist1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: wrist_joint1
+    pid: {p: 50.0, i: 0.01, d: 5}
+  wrist2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: wrist_joint2
+    pid: {p: 50.0, i: 0.01, d: 0}
+  
+  thumb1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint1
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  thumb2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint2
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  thumb3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint3
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+
+  index1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint1
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  index2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint2
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  index3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint3
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+ 
+  middle1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint1
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  middle2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint2
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  middle3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint3
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+
+  small1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: small_joint1
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  small2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: small_joint2
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  small3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: small_joint3
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+
+  little1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: little_joint1
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  little2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: little_joint2
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+  little3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: little_joint3
+    pid: {p: 3.0, i: 0.00, d: 0.0}
+
